@@ -27,7 +27,7 @@ locals {
     size = "Standard_B2s"
   }
   VM_MEDIUM = {
-    size = "Standard_B4s"
+    size = "Standard_B4ms"
   }
 }
 
@@ -80,7 +80,6 @@ output "bar-ip" {
 
 module "vms--ci" {
   for_each = {
-    "1" = local.VM_SMALL
     "2" = local.VM_MEDIUM
   }
 
