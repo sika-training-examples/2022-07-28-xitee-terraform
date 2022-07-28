@@ -21,3 +21,11 @@ lock:
 		-platform=windows_amd64
 	git add .terraform.lock.hcl
 	git commit -m "[auto] chore(terraform.lock.hcl): Update Terraform lock" .terraform.lock.hcl
+
+gen-docs:
+	# Generate the docs for environments
+	terraform-docs markdown ./modules/vm > ./modules/vm/README.md
+	git add ./modules/vm/README.md
+
+	# Commit
+	git commit -m "[auto] docs: Terraform generated docs"
