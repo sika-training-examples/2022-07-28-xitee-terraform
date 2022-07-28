@@ -56,20 +56,6 @@ resource "azurerm_subnet" "default" {
   address_prefixes     = ["10.0.0.0/24"]
 }
 
-module "vm--foo" {
-  source = "./modules/vm"
-
-  name           = "foo"
-  subnet_id      = azurerm_subnet.default.id
-  resource_group = azurerm_resource_group.main
-  public_key     = local.SSH_KEY
-}
-
-output "foo-ip" {
-  value = module.vm--foo.ip
-}
-
-
 module "vm--bar" {
   source = "./modules/vm"
 
