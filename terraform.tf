@@ -38,6 +38,10 @@ locals {
 }
 
 resource "azurerm_resource_group" "main" {
+  lifecycle {
+    prevent_destroy = true
+  }
+
   name     = "ondrejsika"
   location = local.DEFAULT_LOCATION
 }
