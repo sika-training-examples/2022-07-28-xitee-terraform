@@ -70,7 +70,8 @@ module "vm--bar" {
 }
 
 output "bar-ip" {
-  value = module.vm--bar.ip
+  value     = module.vm--bar.ip
+  sensitive = true
 }
 
 
