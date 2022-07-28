@@ -22,6 +22,7 @@ provider "azurerm" {
 
 locals {
   DEFAULT_LOCATION = "westeurope"
+  SSH_KEY          = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCslNKgLyoOrGDerz9pA4a4Mc+EquVzX52AkJZz+ecFCYZ4XQjcg2BK1P9xYfWzzl33fHow6pV/C6QC3Fgjw7txUeH7iQ5FjRVIlxiltfYJH4RvvtXcjqjk8uVDhEcw7bINVKVIS856Qn9jPwnHIhJtRJe9emE7YsJRmNSOtggYk/MaV2Ayx+9mcYnA/9SBy45FPHjMlxntoOkKqBThWE7Tjym44UNf44G8fd+kmNYzGw9T5IKpH1E1wMR+32QJBobX6d7k39jJe8lgHdsUYMbeJOFPKgbWlnx9VbkZh+seMSjhroTgniHjUl8wBFgw0YnhJ/90MgJJL4BToxu9PVnH"
 }
 
 resource "azurerm_resource_group" "main" {
@@ -75,7 +76,7 @@ resource "azurerm_linux_virtual_machine" "foo" {
 
   admin_ssh_key {
     username   = "default"
-    public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCslNKgLyoOrGDerz9pA4a4Mc+EquVzX52AkJZz+ecFCYZ4XQjcg2BK1P9xYfWzzl33fHow6pV/C6QC3Fgjw7txUeH7iQ5FjRVIlxiltfYJH4RvvtXcjqjk8uVDhEcw7bINVKVIS856Qn9jPwnHIhJtRJe9emE7YsJRmNSOtggYk/MaV2Ayx+9mcYnA/9SBy45FPHjMlxntoOkKqBThWE7Tjym44UNf44G8fd+kmNYzGw9T5IKpH1E1wMR+32QJBobX6d7k39jJe8lgHdsUYMbeJOFPKgbWlnx9VbkZh+seMSjhroTgniHjUl8wBFgw0YnhJ/90MgJJL4BToxu9PVnH"
+    public_key = local.SSH_KEY
   }
 
   os_disk {
@@ -94,7 +95,6 @@ resource "azurerm_linux_virtual_machine" "foo" {
 output "foo-ip" {
   value = azurerm_public_ip.foo.ip_address
 }
-
 
 resource "azurerm_public_ip" "bar" {
   name                = "bar"
@@ -128,7 +128,7 @@ resource "azurerm_linux_virtual_machine" "bar" {
 
   admin_ssh_key {
     username   = "default"
-    public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCslNKgLyoOrGDerz9pA4a4Mc+EquVzX52AkJZz+ecFCYZ4XQjcg2BK1P9xYfWzzl33fHow6pV/C6QC3Fgjw7txUeH7iQ5FjRVIlxiltfYJH4RvvtXcjqjk8uVDhEcw7bINVKVIS856Qn9jPwnHIhJtRJe9emE7YsJRmNSOtggYk/MaV2Ayx+9mcYnA/9SBy45FPHjMlxntoOkKqBThWE7Tjym44UNf44G8fd+kmNYzGw9T5IKpH1E1wMR+32QJBobX6d7k39jJe8lgHdsUYMbeJOFPKgbWlnx9VbkZh+seMSjhroTgniHjUl8wBFgw0YnhJ/90MgJJL4BToxu9PVnH"
+    public_key = local.SSH_KEY
   }
 
   os_disk {
@@ -146,4 +146,17 @@ resource "azurerm_linux_virtual_machine" "bar" {
 
 output "bar-ip" {
   value = azurerm_public_ip.bar.ip_address
+}
+
+module "vm--baz" {
+  source = "./modules/vm"
+
+  name           = "baz"
+  subnet_id      = azurerm_subnet.default.id
+  resource_group = azurerm_resource_group.main
+  public_key     = local.SSH_KEY
+}
+
+output "baz-ip" {
+  value = module.vm--baz.ip
 }
