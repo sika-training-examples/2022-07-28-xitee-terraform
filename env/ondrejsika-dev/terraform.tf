@@ -61,7 +61,7 @@ resource "azurerm_subnet" "default" {
 }
 
 module "vm--bar" {
-  source = "./modules/vm"
+  source = "../../modules/vm"
 
   name           = "bar"
   subnet_id      = azurerm_subnet.default.id
@@ -80,7 +80,7 @@ module "vms--ci" {
     "2" = local.VM_MEDIUM
   }
 
-  source = "./modules/vm"
+  source = "../../modules/vm"
 
   name           = "ci-${each.key}"
   subnet_id      = azurerm_subnet.default.id
