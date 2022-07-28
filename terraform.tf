@@ -44,109 +44,33 @@ resource "azurerm_subnet" "default" {
   address_prefixes     = ["10.0.0.0/24"]
 }
 
-resource "azurerm_public_ip" "foo" {
-  name                = "foo"
-  resource_group_name = azurerm_resource_group.main.name
-  location            = azurerm_resource_group.main.location
-  allocation_method   = "Static"
-}
+module "vm--foo" {
+  source = "./modules/vm"
 
-resource "azurerm_network_interface" "foo" {
-  name                = "foo"
-  location            = azurerm_resource_group.main.location
-  resource_group_name = azurerm_resource_group.main.name
-
-  ip_configuration {
-    name                          = "internal"
-    subnet_id                     = azurerm_subnet.default.id
-    private_ip_address_allocation = "Dynamic"
-    public_ip_address_id          = azurerm_public_ip.foo.id
-  }
-}
-
-resource "azurerm_linux_virtual_machine" "foo" {
-  name                = "foo"
-  resource_group_name = azurerm_resource_group.main.name
-  location            = azurerm_resource_group.main.location
-  size                = "Standard_B2s"
-  admin_username      = "default"
-  network_interface_ids = [
-    azurerm_network_interface.foo.id,
-  ]
-
-  admin_ssh_key {
-    username   = "default"
-    public_key = local.SSH_KEY
-  }
-
-  os_disk {
-    caching              = "ReadWrite"
-    storage_account_type = "Standard_LRS"
-  }
-
-  source_image_reference {
-    publisher = "Canonical"
-    offer     = "UbuntuServer"
-    sku       = "16.04-LTS"
-    version   = "latest"
-  }
+  name           = "foo"
+  subnet_id      = azurerm_subnet.default.id
+  resource_group = azurerm_resource_group.main
+  public_key     = local.SSH_KEY
 }
 
 output "foo-ip" {
-  value = azurerm_public_ip.foo.ip_address
+  value = module.vm--foo.ip
 }
 
-resource "azurerm_public_ip" "bar" {
-  name                = "bar"
-  resource_group_name = azurerm_resource_group.main.name
-  location            = azurerm_resource_group.main.location
-  allocation_method   = "Static"
-}
 
-resource "azurerm_network_interface" "bar" {
-  name                = "bar"
-  location            = azurerm_resource_group.main.location
-  resource_group_name = azurerm_resource_group.main.name
+module "vm--bar" {
+  source = "./modules/vm"
 
-  ip_configuration {
-    name                          = "internal"
-    subnet_id                     = azurerm_subnet.default.id
-    private_ip_address_allocation = "Dynamic"
-    public_ip_address_id          = azurerm_public_ip.bar.id
-  }
-}
-
-resource "azurerm_linux_virtual_machine" "bar" {
-  name                = "bar"
-  resource_group_name = azurerm_resource_group.main.name
-  location            = azurerm_resource_group.main.location
-  size                = "Standard_B2s"
-  admin_username      = "default"
-  network_interface_ids = [
-    azurerm_network_interface.bar.id,
-  ]
-
-  admin_ssh_key {
-    username   = "default"
-    public_key = local.SSH_KEY
-  }
-
-  os_disk {
-    caching              = "ReadWrite"
-    storage_account_type = "Standard_LRS"
-  }
-
-  source_image_reference {
-    publisher = "Canonical"
-    offer     = "UbuntuServer"
-    sku       = "16.04-LTS"
-    version   = "latest"
-  }
+  name           = "bar"
+  subnet_id      = azurerm_subnet.default.id
+  resource_group = azurerm_resource_group.main
+  public_key     = local.SSH_KEY
 }
 
 output "bar-ip" {
-  value = azurerm_public_ip.bar.ip_address
+  value = module.vm--bar.ip
 }
+
 
 module "vm--baz" {
   source = "./modules/vm"
