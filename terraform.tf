@@ -5,6 +5,12 @@ terraform {
       version = "3.15.1"
     }
   }
+  backend "azurerm" {
+    resource_group_name  = "storage"
+    storage_account_name = "xiteedemostates"
+    container_name       = "states"
+    key                  = "ondrejsika.tfstate"
+  }
 }
 
 variable "azurerm_client_id" {}
