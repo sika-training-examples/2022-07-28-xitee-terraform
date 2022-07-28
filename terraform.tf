@@ -19,3 +19,12 @@ provider "azurerm" {
   tenant_id       = var.azurerm_tenant_id
   client_secret   = var.client_secret
 }
+
+locals {
+  DEFAULT_LOCATION = "westeurope"
+}
+
+resource "azurerm_resource_group" "main" {
+  name     = "ondrejsika"
+  location = local.DEFAULT_LOCATION
+}
