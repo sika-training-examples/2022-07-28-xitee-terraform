@@ -29,3 +29,22 @@ gen-docs:
 
 	# Commit
 	git commit -m "[auto] docs: Terraform generated docs"
+
+tf-init:
+ifndef CLINET_ID
+	$(error CLINET_ID is undefined)
+endif
+ifndef SUBSCRIPTION_ID
+	$(error SUBSCRIPTION_ID is undefined)
+endif
+ifndef TENANT_ID
+	$(error TENANT_ID is undefined)
+endif
+ifndef CLIENT_SECRET
+	$(error CLIENT_SECRET is undefined)
+endif
+	terraform init \
+		-backend-config="client_id=${CLINET_ID}" \
+		-backend-config="subscription_id=${SUBSCRIPTION_ID}" \
+		-backend-config="tenant_id=${TENANT_ID}" \
+		-backend-config="client_secret=${CLIENT_SECRET}"
