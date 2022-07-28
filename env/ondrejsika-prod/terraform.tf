@@ -9,7 +9,7 @@ terraform {
     resource_group_name  = "storage"
     storage_account_name = "xiteedemostates"
     container_name       = "states"
-    key                  = "ondrejsika.tfstate"
+    key                  = "ondrejsika-prod.tfstate"
   }
 }
 
@@ -42,7 +42,7 @@ resource "azurerm_resource_group" "main" {
     prevent_destroy = true
   }
 
-  name     = "ondrejsika"
+  name     = "ondrejsika-prod"
   location = local.DEFAULT_LOCATION
 }
 
@@ -63,7 +63,7 @@ resource "azurerm_subnet" "default" {
 module "vm--bar" {
   source = "../../modules/vm"
 
-  name           = "bar"
+  name           = "prod-bar"
   subnet_id      = azurerm_subnet.default.id
   resource_group = azurerm_resource_group.main
   public_key     = local.SSH_KEY
@@ -82,7 +82,7 @@ module "vms--ci" {
 
   source = "../../modules/vm"
 
-  name           = "ci-${each.key}"
+  name           = "prod-ci-${each.key}"
   subnet_id      = azurerm_subnet.default.id
   resource_group = azurerm_resource_group.main
   public_key     = local.SSH_KEY
