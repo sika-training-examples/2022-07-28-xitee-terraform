@@ -36,3 +36,11 @@ output "example-infra" {
   value     = module.example-infra
   sensitive = true
 }
+
+data "azurerm_resource_group" "xxx" {
+  name = "xxx"
+}
+
+output "xxx" {
+  value = data.azurerm_resource_group.xxx
+}
