@@ -42,11 +42,6 @@ resource "azurerm_resource_group" "main" {
   location = local.DEFAULT_LOCATION
 }
 
-resource "azurerm_resource_group" "foo" {
-  name     = "foo"
-  location = local.DEFAULT_LOCATION
-}
-
 resource "azurerm_virtual_network" "main" {
   name                = azurerm_resource_group.main.name
   address_space       = ["10.0.0.0/16"]
