@@ -47,6 +47,13 @@ resource "azurerm_network_interface" "this" {
 }
 
 resource "azurerm_linux_virtual_machine" "this" {
+  lifecycle {
+    ignore_changes = [
+      tags,
+      source_image_reference,
+    ]
+  }
+
   name                = var.name
   resource_group_name = var.resource_group.name
   location            = var.resource_group.location
@@ -69,7 +76,7 @@ resource "azurerm_linux_virtual_machine" "this" {
   source_image_reference {
     publisher = "Canonical"
     offer     = "UbuntuServer"
-    sku       = "16.04-LTS"
+    sku       = "18.04-LTS"
     version   = "latest"
   }
 }
